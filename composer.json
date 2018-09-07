@@ -1,0 +1,21 @@
+{
+    "name": "helpflow/installer",
+    "description": "Installer for the Helpflow support desk system.",
+    "keywords": ["laravel", "support", "help", "desk", "installer", "console"],
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Mike Barlow",
+            "email": "mike@mikebarlow.co.uk"
+        }
+    ],
+    "require": {
+        "symfony/console": "^4.1"
+    },
+    "autoload": {
+        "psr-4": {
+            "Helpflow\\Installer\\": "src/"
+        }
+    },
+    "bin": ["bin/helpflow"]
+}
