@@ -57,11 +57,11 @@ class InstallCommand extends Command
         }
 
         // composer require helpflow
-        $composerJson['require']['helpflow/helpflow'] = '1.0.*';
+        $composerJson['require']['helpflow/helpflow'] = '*@dev';
 
         // composer require admin type
         if ($type === 'Laravel Spark') {
-            $composerJson['require']['helpflow/spark-admin'] = '1.0.*';
+            $composerJson['require']['helpflow/spark-admin'] = '*@dev';
         }
 
         // save composer
@@ -97,8 +97,15 @@ class InstallCommand extends Command
             });
 
         // publish helpflow tag
+        $process = new Process('php ' . $path . '/artisan vendor:publish --tag=helpflow');
+        $process
+            ->setTimeout(null)
+            ->run(function ($type, $line) use ($output) {
+                $output->write($line);
+            });
 
 
+        $output->writeln('Finished');
         // if type is laravel spark, message to add admins to the developers section for kiosk access
     }
 }
