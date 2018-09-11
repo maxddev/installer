@@ -7,5 +7,6 @@ use Symfony\Component\Console\Application;
 $application = new Application('Helpflow Installer', '1.0.0');
 
 $application->add(new \Helpflow\Installer\InstallCommand());
+$application->add(new \Helpflow\Installer\UpdateCommand());
 
 $application->run();
