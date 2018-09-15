@@ -21,8 +21,7 @@ class UpdateCommand extends Command
     {
         $this
             ->setName('update')
-            ->setDescription('Update to the latest version of Helpflow')
-            ->addArgument('path', InputArgument::REQUIRED, 'The absolute path to the root laravel directory');
+            ->setDescription('Update to the latest version of Helpflow');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,7 +33,7 @@ class UpdateCommand extends Command
             0
         );
         $this->type = $helper->ask($input, $output, $question);
-        $this->path = rtrim($input->getArgument('path'), '/');
+        $this->path = rtrim(getcwd(), '/');
         $this->progressBar = new ProgressBar($output, 2);
 
         // update helpflow git
@@ -45,9 +44,8 @@ class UpdateCommand extends Command
 
         $completeMsg = [
             '<info>Helpflow updated successfully!</info>',
+            '<info>Please check the changelog for any asset changes which may need to be published</info>'
         ];
-
-        // display message about assets
 
         $output->writeln($completeMsg);
     }
@@ -55,7 +53,7 @@ class UpdateCommand extends Command
     public function updateRepo($output)
     {
         $output->writeln([
-            '<comment>Starting repo update</comment>',
+            '<comment>Starting repository update</comment>',
             '<comment>==================</comment>'
         ]);
         $process = new Process('cd ' . $this->path . '/helpflow && git pull origin master');

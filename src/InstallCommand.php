@@ -21,8 +21,7 @@ class InstallCommand extends Command
     {
         $this
             ->setName('install')
-            ->setDescription('Install a new version of Helpflow')
-            ->addArgument('path', InputArgument::REQUIRED, 'The absolute path to the root laravel directory');
+            ->setDescription('Install a new version of Helpflow');
     }
 
     protected function execute(InputInterface $input, OutputInterface $output)
@@ -34,7 +33,7 @@ class InstallCommand extends Command
             0
         );
         $this->type = $helper->ask($input, $output, $question);
-        $this->path = rtrim($input->getArgument('path'), '/');
+        $this->path = rtrim(getcwd(), '/');
         $this->progressBar = new ProgressBar($output, 6);
 
         // git clone helpflow
