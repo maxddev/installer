@@ -36,8 +36,8 @@ class InstallCommand extends Command
         $this->path = rtrim(getcwd(), '/');
         $this->progressBar = new ProgressBar($output, 6);
 
-        // git clone helpflow
-        $this->cloneRepo($output);
+        // download helpflow
+        $this->downloadCode($output);
 
         // add to composer file
         $this->setupComposerFile($output);
@@ -65,13 +65,48 @@ class InstallCommand extends Command
         $output->writeln($completeMsg);
     }
 
-    public function cloneRepo($output)
+    public function downloadCode($output)
     {
         $output->writeln([
-            '<comment>Starting Git clone</comment>',
+            '<comment>Download Code</comment>',
             '<comment>==================</comment>'
         ]);
-        $process = new Process('git clone git@github.com:mikebarlow/helpflow.git ' . $this->path . '/helpflow');
+
+        $client = new \GuzzleHttp\Client([
+            'base_uri' => '',
+        ]);
+
+        try {
+            $response = $client->request(
+                'GET',
+                'https://sellmygit.com/api/download/latest/6958017c-4bd2-4769-9d0b-e253ad98eaa2',
+                [
+                    'headers' => [
+                        'smg-download-type' => 'application/zip',
+                        'smg-auth' => $this->getLicenseKey()
+                    ]
+                ]
+            );
+        } catch (\GuzzleHttp\Exception\RequestException $e) {
+            $output->writeln([
+                '<fg=red>Helpflow Installation stopped [' . $e->getResponse()->getReasonPhrase() . ']</>'
+            ]);
+            die();
+        }
+
+        $filename = str_replace('attachment; filename=', '', $response->getHeader('Content-Disposition')['0']);
+
+        file_put_contents(
+            $this->path . DS . $filename,
+            $response->getBody()
+        );
+
+        $bits = explode('-', str_replace(['.zip', '0-g'], '', $filename));
+        unset($bits[2]);
+        $zipFolder = implode('-', $bits);
+        $hfFolder = $this->path . DS . 'helpflow';
+
+        $process = new Process('unzip ' . $this->path . DS . $filename . ' && mv ' . $zipFolder . ' ' . $hfFolder);
         $process
             ->setTimeout(null)
             ->run(function ($type, $line) use ($output) {
@@ -204,5 +239,15 @@ class InstallCommand extends Command
 
         $this->progressBar->advance();
         $output->writeln('');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLicenseKey()
+    {
+        return file_get_contents(
+            HF_INSTALLER . DS . 'storage' . DS . 'license.key'
+        );
     }
 }
