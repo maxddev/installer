@@ -3,6 +3,7 @@
 namespace Helpflow\Installer;
 
 use Symfony\Component\Process\Process;
+use Helpflow\Installer\Service\SellMyGit;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -72,46 +73,30 @@ class InstallCommand extends Command
             '<comment>==================</comment>'
         ]);
 
-        $client = new \GuzzleHttp\Client([
-            'base_uri' => '',
-        ]);
+        $sellMyGit = new SellMyGit;
 
-        try {
-            $response = $client->request(
-                'GET',
-                'https://sellmygit.com/api/download/latest/6958017c-4bd2-4769-9d0b-e253ad98eaa2',
-                [
-                    'headers' => [
-                        'smg-download-type' => 'application/zip',
-                        'smg-auth' => $this->getLicenseKey()
-                    ]
-                ]
-            );
-        } catch (\GuzzleHttp\Exception\RequestException $e) {
+        $result = $sellMyGit->getFile(
+            $this->path,
+            $this->getLicenseKey()
+        );
+
+        if (! $result) {
             $output->writeln([
-                '<fg=red>Helpflow Installation stopped [' . $e->getResponse()->getReasonPhrase() . ']</>'
+                '<fg=red>Helpflow Installation stopped [' . $sellMyGit->getErrorMsg() . ']</>'
             ]);
             die();
         }
 
-        $filename = str_replace('attachment; filename=', '', $response->getHeader('Content-Disposition')['0']);
-
-        file_put_contents(
-            $this->path . DS . $filename,
-            $response->getBody()
-        );
-
-        $bits = explode('-', str_replace(['.zip', '0-g'], '', $filename));
-        unset($bits[2]);
-        $zipFolder = implode('-', $bits);
         $hfFolder = $this->path . DS . 'helpflow';
 
-        $process = new Process('unzip ' . $this->path . DS . $filename . ' && mv ' . $zipFolder . ' ' . $hfFolder);
+        $process = new Process('unzip ' . $this->path . DS . $sellMyGit->getFilename() . ' && mv ' . $sellMyGit->getUnzippedName() . ' ' . $hfFolder);
         $process
             ->setTimeout(null)
             ->run(function ($type, $line) use ($output) {
-                $output->write($line);
+                //
             });
+
+        unlink($this->path . DS . $sellMyGit->getFilename());
 
         $this->progressBar->advance();
         $output->writeln('');

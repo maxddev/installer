@@ -56,6 +56,12 @@ class UpdateCommand extends Command
             '<comment>Starting repository update</comment>',
             '<comment>==================</comment>'
         ]);
+
+
+
+
+
+
         $process = new Process('cd ' . $this->path . '/helpflow && git pull origin master');
         $process
             ->setTimeout(null)
@@ -86,5 +92,15 @@ class UpdateCommand extends Command
 
         $this->progressBar->advance();
         $output->writeln('');
+    }
+
+    /**
+     * @return string
+     */
+    protected function getLicenseKey()
+    {
+        return file_get_contents(
+            HF_INSTALLER . DS . 'storage' . DS . 'license.key'
+        );
     }
 }
