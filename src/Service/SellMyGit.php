@@ -25,7 +25,7 @@ class SellMyGit
         try {
             $response = $client->request(
                 'GET',
-                'https://sellmygit.com/api/download/latest/6958017c-4bd2-4769-9d0b-e253ad98eaa2',
+                'https://sellmygit.com/api/download/latest/4045456a-b904-4cf1-a28f-20bdd622ef0d',
                 [
                     'headers' => [
                         'smg-download-type' => 'application/zip',
