@@ -89,7 +89,7 @@ class InstallCommand extends Command
 
         $hfFolder = $this->path . DS . 'helpflow';
 
-        $process = new Process('unzip ' . $this->path . DS . $sellMyGit->getFilename() . ' && mv ' . $sellMyGit->getUnzippedName() . ' ' . $hfFolder);
+        $process = new Process('unzip ' . $this->path . DS . $sellMyGit->getFilename() . ' && mv -f ' . $sellMyGit->getUnzippedName() . ' ' . $hfFolder);
         $process
             ->setTimeout(null)
             ->run(function ($type, $line) use ($output) {

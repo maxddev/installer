@@ -3,6 +3,7 @@
 namespace Helpflow\Installer;
 
 use Symfony\Component\Process\Process;
+use Helpflow\Installer\Service\SellMyGit;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -57,17 +58,29 @@ class UpdateCommand extends Command
             '<comment>==================</comment>'
         ]);
 
+        $sellMyGit = new SellMyGit;
+        $result = $sellMyGit->getFile(
+            $this->path,
+            $this->getLicenseKey()
+        );
 
+        if (! $result) {
+            $output->writeln([
+                '<fg=red>Helpflow Updated stopped [' . $sellMyGit->getErrorMsg() . ']</>'
+            ]);
+            die();
+        }
 
+        $hfFolder = $this->path . DS . 'helpflow';
 
-
-
-        $process = new Process('cd ' . $this->path . '/helpflow && git pull origin master');
+        $process = new Process('unzip ' . $this->path . DS . $sellMyGit->getFilename() . ' && mv -f ' . $sellMyGit->getUnzippedName() . ' ' . $hfFolder);
         $process
             ->setTimeout(null)
             ->run(function ($type, $line) use ($output) {
-                $output->write($line);
+                //
             });
+
+        unlink($this->path . DS . $sellMyGit->getFilename());
 
         $this->progressBar->advance();
         $output->writeln('');
