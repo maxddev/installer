@@ -35,7 +35,7 @@ class InstallCommand extends Command
         );
         $this->type = $helper->ask($input, $output, $question);
         $this->path = rtrim(getcwd(), '/');
-        $this->progressBar = new ProgressBar($output, 6);
+        $this->progressBar = new ProgressBar($output, 7);
 
         // download helpflow
         $this->downloadCode($output);
@@ -45,6 +45,9 @@ class InstallCommand extends Command
 
         // composer install
         $this->composerInstall($output);
+
+        // add Helpflow User Trait
+        $this->addHelpflowUserTrait($output);
 
         // add service provider
         $this->addServiceProviders($output);
@@ -154,6 +157,40 @@ class InstallCommand extends Command
             ->run(function ($type, $line) use ($output) {
                 $output->write($line);
             });
+
+        $this->progressBar->advance();
+        $output->writeln('');
+    }
+
+    public function addHelpflowUserTrait($output)
+    {
+        $output->writeln([
+            '<comment>Add Helpflow User Trait</comment>',
+            '<comment>==============================</comment>'
+        ]);
+
+        if (! file_exists($this->path . '/app/User.php')) {
+            $output->writeln([
+                '<fg=red>Could not find the User Model, please add the "Helpflow\Helpflow\HelpflowUser" trait to your User model</>'
+            ]);
+
+            return;
+        }
+
+        $userModel = file_get_contents($this->path . '/app/User.php');
+
+        if ($this->type === 'Laravel Spark') {
+            $userModel = str_replace(
+                "class User extends SparkUser\n{\n",
+                "class User extends SparkUser\n{\n    use \Helpflow\Helpflow\HelpflowUser;\n",
+                $userModel
+            );
+        }
+
+        file_put_contents(
+            $this->path . '/app/User.php',
+            $userModel
+        );
 
         $this->progressBar->advance();
         $output->writeln('');
