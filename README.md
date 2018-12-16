@@ -4,11 +4,13 @@ Before attempting to use the installer please make sure you have purchased a lic
 
 ## Installation
 
-After a license has been purchased, clone this repository to a location on your system and then run `composer install` within the root directory of the repository. While installing, add the directory path to the repository to your systems PATH variable. This will allow the `helpflow` installer to run from anywhere within your system.
+After a license has been purchased, clone this repository to a location on your system and then run `composer install` within the root directory of the repository.
+
+While installing, add the directory path to the repository to your systems PATH variable. This will allow the `helpflow` installer to run from anywhere within your system.
 
 ## Installing Helpflow
 
-Once you have setup the installer, simply navigate in the command line to your application and run
+Once you have setup the installer, simply navigate in the command line to the root of your application and run
 
     helpflow install
 
