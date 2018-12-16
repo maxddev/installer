@@ -12,11 +12,11 @@ Once you have setup the installer, simply navigate in the command line to your a
 
     helpflow install
 
-You will be asked which admin type you want to install, after selecting the installer will proceed to install Helpflow.
+You will be asked which admin type you want to install, after selecting, the installer will proceed to install Helpflow.
 
 ### Laravel Spark
 
-As it's difficult to determine if you have modified any of the files, you will need to manually add a link to the Helpflow Kiosk panel to your Spark Kiosk menu. The route can be generated with `route('helpflow.admin.list-tickets')`.
+You will need to manually add a link to the Helpflow Kiosk panel to your Spark Kiosk menu. The route can be generated with `route('helpflow.admin.list-tickets')`.
 
 You will also need to add a link to Helpflow from your applications frontend so your customers can access their tickets. You can generate this link with `route('helpflow.list-tickets')`.
 
