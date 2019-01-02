@@ -16,13 +16,11 @@ Once you have setup the installer, simply navigate in the command line to the ro
 
 You will be asked which admin type you want to install, after selecting, the installer will proceed to install Helpflow.
 
-### Laravel Spark
+Once installated you will need to add a link to your help desk within your application for your customers and support staff alike. The route can be generated with `route('helpflow.admin.list-tickets')`.
 
-You will need to manually add a link to the Helpflow Kiosk panel to your Spark Kiosk menu. The route can be generated with `route('helpflow.admin.list-tickets')`.
+## Adding Support Staff
 
-You will also need to add a link to Helpflow from your applications frontend so your customers can access their tickets. You can generate this link with `route('helpflow.list-tickets')`.
-
-**Also don't forget to add any support staff to `$developers` array in your `SparkServiceProvider` so they can access the staff members portion of Helpflow**
+You will also need to setup who can access the support staff functionality of your help desk. If you are using Helpflow Generic or Helpflow Spark integrations, this can be done by defining the email address of any user account that should have support staff privledges within the `helpflow-config.php` file.
 
 ## Updating Helpflow
 

@@ -60,11 +60,8 @@ class InstallCommand extends Command
 
         $completeMsg = [
             '<info>Helpflow installation completed successfully!</info>',
+            '<info>Don\'t forget to add a link to your help desk within your application. See the readme for more information.</info>'
         ];
-
-        if ($this->type === 'Laravel Spark') {
-            $completeMsg[] = '<info>As you are using Laravel Spark, don\'t forget to add the links within the Kiosk to Helpflow. See the readme for more information.</info>';
-        }
 
         $output->writeln($completeMsg);
     }
