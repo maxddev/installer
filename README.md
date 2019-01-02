@@ -16,7 +16,7 @@ Once you have setup the installer, simply navigate in the command line to the ro
 
 You will be asked which admin type you want to install, after selecting, the installer will proceed to install Helpflow.
 
-Once installated you will need to add a link to your help desk within your application for your customers and support staff alike. The route can be generated with `route('helpflow.admin.list-tickets')`.
+Once installated you will need to add a link to your help desk within your application for your customers and support staff alike. The route can be generated with `route('helpflow.list-tickets')`.
 
 ## Adding Support Staff
 
