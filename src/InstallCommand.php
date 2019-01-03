@@ -223,7 +223,7 @@ class InstallCommand extends Command
         if ($this->type === 'Spark') {
             $adminProvider = 'Helpflow\SparkAdmin\Providers\HelpflowSparkServiceProvider::class';
         } elseif ($this->type === 'Generic') {
-            $adminProvider = 'Helpflow\SparkAdmin\Providers\HelpflowGenericServiceProvider::class';
+            $adminProvider = 'Helpflow\Generic\Providers\HelpflowGenericServiceProvider::class';
         }
 
         $appConfig = str_replace(
