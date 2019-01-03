@@ -29,7 +29,7 @@ class UpdateCommand extends Command
     {
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
-            'Please select your admin integration type (defaults to Laravel Spark)',
+            'Please select your integration type (defaults to Laravel Spark)',
             ['Laravel Spark'],
             0
         );
