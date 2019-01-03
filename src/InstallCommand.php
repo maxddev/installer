@@ -208,7 +208,7 @@ class InstallCommand extends Command
         );
 
         if ($this->type === 'Laravel Spark') {
-            $adminProvider = 'Helpflow\SparkAdmin\Providers\HelpflowSparkAdminServiceProvider::class';
+            $adminProvider = 'Helpflow\SparkAdmin\Providers\HelpflowSparkServiceProvider::class';
         }
 
         $appConfig = str_replace(
