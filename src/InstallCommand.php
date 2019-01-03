@@ -29,8 +29,8 @@ class InstallCommand extends Command
     {
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
-            'Please select your integration type (defaults to Laravel Spark)',
-            ['Laravel Spark'],
+            'Please select your integration type (defaults to Generic)',
+            ['Generic', 'Spark'],
             0
         );
         $this->type = $helper->ask($input, $output, $question);
@@ -133,8 +133,10 @@ class InstallCommand extends Command
         $composerJson['require']['helpflow/helpflow'] = '*@dev';
 
         // composer require admin type
-        if ($this->type === 'Laravel Spark') {
+        if ($this->type === 'Spark') {
             $composerJson['require']['helpflow/spark-admin'] = '*@dev';
+        } elseif ($this->type === 'Generic') {
+            $composerJson['require']['helpflow/generic'] = '*@dev';
         }
 
         // save composer
@@ -181,10 +183,16 @@ class InstallCommand extends Command
 
         $userModel = file_get_contents($this->path . '/app/User.php');
 
-        if ($this->type === 'Laravel Spark') {
+        if ($this->type === 'Spark') {
             $userModel = str_replace(
                 "class User extends SparkUser\n{\n",
                 "class User extends SparkUser\n{\n    use \Helpflow\Helpflow\HelpflowUser;\n",
+                $userModel
+            );
+        } elseif ($this->type === 'Generic') {
+            $userModel = str_replace(
+                "class User extends Authenticatable\n{\n",
+                "class User extends Authenticatable\n{\n    use \Helpflow\Helpflow\HelpflowUser;\n",
                 $userModel
             );
         }
@@ -212,8 +220,10 @@ class InstallCommand extends Command
             $appConfig
         );
 
-        if ($this->type === 'Laravel Spark') {
+        if ($this->type === 'Spark') {
             $adminProvider = 'Helpflow\SparkAdmin\Providers\HelpflowSparkServiceProvider::class';
+        } elseif ($this->type === 'Generic') {
+            $adminProvider = 'Helpflow\SparkAdmin\Providers\HelpflowGenericServiceProvider::class';
         }
 
         $appConfig = str_replace(

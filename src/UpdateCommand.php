@@ -29,8 +29,8 @@ class UpdateCommand extends Command
     {
         $helper = $this->getHelper('question');
         $question = new ChoiceQuestion(
-            'Please select your integration type (defaults to Laravel Spark)',
-            ['Laravel Spark'],
+            'Please select your integration type (defaults to Generic)',
+            ['Generic', 'Spark'],
             0
         );
         $this->type = $helper->ask($input, $output, $question);
@@ -88,8 +88,10 @@ class UpdateCommand extends Command
 
     public function composerUpdate($output)
     {
-        if ($this->type === 'Laravel Spark') {
+        if ($this->type === 'Spark') {
             $adminPackage = 'helpflow/spark-admin';
+        } elseif ($this->type === 'Generic') {
+            $adminPackage = 'helpflow/generic';
         }
 
         $output->writeln([
