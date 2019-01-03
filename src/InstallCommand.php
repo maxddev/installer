@@ -60,7 +60,12 @@ class InstallCommand extends Command
 
         $completeMsg = [
             '<info>Helpflow installation completed successfully!</info>',
-            '<info>Don\'t forget to add a link to your help desk within your application. See the readme for more information.</info>'
+            '<comment>==================</comment>',
+            '<comment>Next Steps</comment>',
+            '<comment>==================</comment>',
+            '<comment>Add a link to your help desk from your application.</comment>',
+            '<comment>Define your support staff via the helpflow-staff config.</comment>',
+            '<comment>See the readmes for more information.</comment>',
         ];
 
         $output->writeln($completeMsg);
