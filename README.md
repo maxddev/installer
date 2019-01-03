@@ -8,19 +8,25 @@ After a license has been purchased, clone this repository to a location on your 
 
 While installing, add the directory path to the repository to your systems PATH variable. This will allow the `helpflow` installer to run from anywhere within your system.
 
+## Register License key
+
+Before you can install Helpflow you will need to set your license key from Sell My Git. This can be found on the `View Releases` page from within `My Purchases`. To set your license key, run the following command
+
+    helpflow license-key <your-key-here>
+
 ## Installing Helpflow
 
 Once you have setup the installer, simply navigate in the command line to the root of your application and run
 
     helpflow install
 
-You will be asked which admin type you want to install, after selecting, the installer will proceed to install Helpflow.
+You will be asked which integration type you want to install, after selecting, the installer will proceed to install Helpflow.
 
 Once installated you will need to add a link to your help desk within your application for your customers and support staff alike. The route can be generated with `route('helpflow.list-tickets')`.
 
 ## Adding Support Staff
 
-You will also need to setup who can access the support staff functionality of your help desk. If you are using Helpflow Generic or Helpflow Spark integrations, this can be done by defining the email address of any user account that should have support staff privledges within the `helpflow-config.php` file.
+You will also need to setup who can access the support staff functionality of your help desk. If you are using Helpflow Generic or Helpflow Spark integrations, this can be done by defining the email address of any user account that should have support staff privledges within the `helpflow-staff.php` file.
 
 ## Updating Helpflow
 
