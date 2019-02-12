@@ -3,7 +3,6 @@
 namespace Helpflow\Installer;
 
 use Symfony\Component\Process\Process;
-use Helpflow\Installer\Service\SellMyGit;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,13 +34,7 @@ class InstallCommand extends Command
         );
         $this->type = $helper->ask($input, $output, $question);
         $this->path = rtrim(getcwd(), '/');
-        $this->progressBar = new ProgressBar($output, 7);
-
-        // download helpflow
-        $this->downloadCode($output);
-
-        // add to composer file
-        $this->setupComposerFile($output);
+        $this->progressBar = new ProgressBar($output, 5);
 
         // composer install
         $this->composerInstall($output);
@@ -71,91 +64,21 @@ class InstallCommand extends Command
         $output->writeln($completeMsg);
     }
 
-    public function downloadCode($output)
-    {
-        $output->writeln([
-            '<comment>Download Code</comment>',
-            '<comment>==================</comment>'
-        ]);
-
-        $sellMyGit = new SellMyGit;
-
-        $result = $sellMyGit->getFile(
-            $this->path,
-            $this->getLicenseKey()
-        );
-
-        if (! $result) {
-            $output->writeln([
-                '<fg=red>Helpflow Installation stopped [' . $sellMyGit->getErrorMsg() . ']</>'
-            ]);
-            die();
-        }
-
-        $hfFolder = $this->path . DS . 'helpflow';
-
-        $process = new Process('unzip ' . $this->path . DS . $sellMyGit->getFilename() . ' && mv -f ' . $sellMyGit->getUnzippedName() . ' ' . $hfFolder);
-        $process
-            ->setTimeout(null)
-            ->run(function ($type, $line) use ($output) {
-                //
-            });
-
-        unlink($this->path . DS . $sellMyGit->getFilename());
-
-        $this->progressBar->advance();
-        $output->writeln('');
-    }
-
-    public function setupComposerFile($output)
-    {
-        $output->writeln([
-            '<comment>Starting Composer.json updates</comment>',
-            '<comment>==============================</comment>'
-        ]);
-        $composerJson = json_decode(
-            file_get_contents($this->path . '/composer.json'),
-            true
-        );
-        if (! empty($composerJson['repositories'])) {
-            $composerJson['repositories'][] = [
-                'type' => 'path',
-                'url' => './helpflow',
-            ];
-        } else {
-            $composerJson['repositories'] = [[
-                'type' => 'path',
-                'url' => './helpflow',
-            ]];
-        }
-
-        // composer require helpflow
-        $composerJson['require']['helpflow/helpflow'] = '*@dev';
-
-        // composer require admin type
-        if ($this->type === 'Spark') {
-            $composerJson['require']['helpflow/spark-admin'] = '*@dev';
-        } elseif ($this->type === 'Generic') {
-            $composerJson['require']['helpflow/generic'] = '*@dev';
-        }
-
-        // save composer
-        file_put_contents(
-            $this->path . '/composer.json',
-            json_encode($composerJson, JSON_UNESCAPED_SLASHES | JSON_PRETTY_PRINT)
-        );
-
-        $this->progressBar->advance();
-        $output->writeln('');
-    }
-
     public function composerInstall($output)
     {
         $output->writeln([
-            '<comment>Running composer update</comment>',
+            '<comment>Running composer require</comment>',
             '<comment>=======================</comment>'
         ]);
-        $process = new Process('cd ' . $this->path . ' && composer update');
+
+        // composer require admin type
+        if ($this->type === 'Spark') {
+            $adminIntegration = 'helpflow/spark-admin';
+        } elseif ($this->type === 'Generic') {
+            $adminIntegration = 'helpflow/generic';
+        }
+
+        $process = new Process('cd ' . $this->path . ' && composer require helpflow/helpflow ' . $adminIntegration);
         $process
             ->setTimeout(null)
             ->run(function ($type, $line) use ($output) {
@@ -273,15 +196,5 @@ class InstallCommand extends Command
 
         $this->progressBar->advance();
         $output->writeln('');
-    }
-
-    /**
-     * @return string
-     */
-    protected function getLicenseKey()
-    {
-        return file_get_contents(
-            HF_INSTALLER . DS . 'storage' . DS . 'license.key'
-        );
     }
 }

@@ -10,6 +10,5 @@ $application = new Application('Helpflow Installer', '1.0.0');
 
 $application->add(new \Helpflow\Installer\InstallCommand());
 $application->add(new \Helpflow\Installer\UpdateCommand());
-$application->add(new \Helpflow\Installer\LicenseKeyCommand());
 
 $application->run();

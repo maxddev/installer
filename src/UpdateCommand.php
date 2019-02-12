@@ -3,7 +3,6 @@
 namespace Helpflow\Installer;
 
 use Symfony\Component\Process\Process;
-use Helpflow\Installer\Service\SellMyGit;
 use Symfony\Component\Console\Command\Command;
 use Symfony\Component\Console\Helper\ProgressBar;
 use Symfony\Component\Console\Input\InputArgument;
@@ -35,10 +34,7 @@ class UpdateCommand extends Command
         );
         $this->type = $helper->ask($input, $output, $question);
         $this->path = rtrim(getcwd(), '/');
-        $this->progressBar = new ProgressBar($output, 2);
-
-        // update helpflow git
-        $this->updateRepo($output);
+        $this->progressBar = new ProgressBar($output, 1);
 
         // composer update
         $this->composerUpdate($output);
@@ -49,41 +45,6 @@ class UpdateCommand extends Command
         ];
 
         $output->writeln($completeMsg);
-    }
-
-    public function updateRepo($output)
-    {
-        $output->writeln([
-            '<comment>Starting repository update</comment>',
-            '<comment>==================</comment>'
-        ]);
-
-        $sellMyGit = new SellMyGit;
-        $result = $sellMyGit->getFile(
-            $this->path,
-            $this->getLicenseKey()
-        );
-
-        if (! $result) {
-            $output->writeln([
-                '<fg=red>Helpflow Updated stopped [' . $sellMyGit->getErrorMsg() . ']</>'
-            ]);
-            die();
-        }
-
-        $hfFolder = $this->path . DS . 'helpflow';
-
-        $process = new Process('unzip ' . $this->path . DS . $sellMyGit->getFilename() . ' && mv -f ' . $sellMyGit->getUnzippedName() . ' ' . $hfFolder);
-        $process
-            ->setTimeout(null)
-            ->run(function ($type, $line) use ($output) {
-                //
-            });
-
-        unlink($this->path . DS . $sellMyGit->getFilename());
-
-        $this->progressBar->advance();
-        $output->writeln('');
     }
 
     public function composerUpdate($output)
@@ -107,15 +68,5 @@ class UpdateCommand extends Command
 
         $this->progressBar->advance();
         $output->writeln('');
-    }
-
-    /**
-     * @return string
-     */
-    protected function getLicenseKey()
-    {
-        return file_get_contents(
-            HF_INSTALLER . DS . 'storage' . DS . 'license.key'
-        );
     }
 }

@@ -1,18 +1,10 @@
 # Helpflow Installer
 
-Before attempting to use the installer please make sure you have purchased a license for Helpflow. This will give you access to the repository allowing this installer to function.
-
 ## Installation
 
-After a license has been purchased, clone this repository to a location on your system and then run `composer install` within the root directory of the repository.
+Clone this repository to a location on your system and then run `composer install` within the root directory of the repository.
 
 While installing, add the directory path to the repository to your systems PATH variable. This will allow the `helpflow` installer to run from anywhere within your system.
-
-## Register License key
-
-Before you can install Helpflow you will need to set your license key from Sell My Git. This can be found on the `View Releases` page from within `My Purchases`. To set your license key, run the following command
-
-    helpflow license-key <your-key-here>
 
 ## Installing Helpflow
 
