@@ -96,7 +96,7 @@ class InstallCommand extends Command
             '<comment>==============================</comment>'
         ]);
 
-        if (! file_exists($this->path . '/app/User.php')) {
+        if (! file_exists($this->path . '/app/Models/User.php')) {
             $output->writeln([
                 '<fg=red>Could not find the User Model, please add the "Helpflow\Helpflow\HelpflowUser" trait to your User model</>'
             ]);
@@ -104,7 +104,7 @@ class InstallCommand extends Command
             return;
         }
 
-        $userModel = file_get_contents($this->path . '/app/User.php');
+        $userModel = file_get_contents($this->path . '/app/Models/User.php');
 
         if ($this->type === 'Spark') {
             $userModel = str_replace(
@@ -121,7 +121,7 @@ class InstallCommand extends Command
         }
 
         file_put_contents(
-            $this->path . '/app/User.php',
+            $this->path . '/app/Models/User.php',
             $userModel
         );
 
